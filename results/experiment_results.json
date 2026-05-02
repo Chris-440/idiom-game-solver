@@ -1,0 +1,109 @@
+{
+  "complexity": [
+    {
+      "n": 20,
+      "time_seconds": 0.000286,
+      "states_computed": 211,
+      "cache_size": 211,
+      "initial_sg": 2
+    },
+    {
+      "n": 30,
+      "time_seconds": 0.000517,
+      "states_computed": 466,
+      "cache_size": 466,
+      "initial_sg": 2
+    },
+    {
+      "n": 40,
+      "time_seconds": 0.000977,
+      "states_computed": 821,
+      "cache_size": 821,
+      "initial_sg": 2
+    },
+    {
+      "n": 50,
+      "time_seconds": 0.00199,
+      "states_computed": 1628,
+      "cache_size": 1628,
+      "initial_sg": 3
+    }
+  ],
+  "opening_analysis": {
+    "total_starts": 30,
+    "winning_starts_count": 15,
+    "losing_starts_count": 15,
+    "win_rate": 50.0,
+    "winning_starts_top5": [
+      [
+        "意气风发",
+        0
+      ],
+      [
+        "大同小异",
+        0
+      ],
+      [
+        "声名远扬",
+        0
+      ],
+      [
+        "气壮山河",
+        0
+      ],
+      [
+        "晏安鸩毒",
+        0
+      ]
+    ],
+    "losing_starts_top5": [
+      [
+        "一心一意",
+        1
+      ],
+      [
+        "发扬光大",
+        1
+      ],
+      [
+        "异口同声",
+        1
+      ],
+      [
+        "扬眉吐气",
+        1
+      ],
+      [
+        "河清海晏",
+        1
+      ]
+    ]
+  },
+  "consistency": {
+    "sg_winning": true,
+    "minimax_winning": true,
+    "consistent": true
+  },
+  "winning_strategy": {
+    "best_move": "意气风发",
+    "opponent_sg": 0,
+    "strategy_correct": true
+  },
+  "graph_stats": {
+    "num_nodes": 30,
+    "num_edges": 29,
+    "avg_out_degree": 0.97,
+    "avg_in_degree": 0.97,
+    "num_components": 1,
+    "max_component_size": 30,
+    "num_dead_ends": 1,
+    "num_starters": 1,
+    "out_degree_distribution": {
+      "0": 1,
+      "1": 29
+    },
+    "in_degree_distribution": {
+      "1": 29
+    }
+  }
+}

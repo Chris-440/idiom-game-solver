@@ -1,0 +1,9 @@
+[
+  {
+    "draws": 0,
+    "p1_wins": 9743,
+    "p2_wins": 257,
+    "player1": "QLearning",
+    "player2": "Random"
+  }
+]

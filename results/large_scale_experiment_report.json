@@ -1,0 +1,24 @@
+{
+  "experiment_config": {
+    "idiom_count": 29502,
+    "algorithm": "Self-play Q-Learning (跟踪 used_set)",
+    "episodes": 3000,
+    "timestamp": "2026-04-17 15:51:31"
+  },
+  "graph_analysis": {
+    "num_nodes": 29502,
+    "num_edges": 1930610,
+    "density": 0.002218228879411335,
+    "sparsity": 0.9977817711205886,
+    "avg_out_degree": 65.43997017151379,
+    "max_out_degree": 676,
+    "zero_out_degree_count": 235,
+    "num_components": 4,
+    "max_component_size": 29499
+  },
+  "results_summary": {
+    "win_count": 28665,
+    "lose_count": 837,
+    "solve_time_seconds": 17.365
+  }
+}
