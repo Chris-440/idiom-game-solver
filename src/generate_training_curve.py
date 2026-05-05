@@ -4,6 +4,13 @@
 """
 
 import json
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from src.config import get_result_path
+
 import matplotlib
 matplotlib.rcParams['font.sans-serif'] = ['PingFang SC', 'Microsoft YaHei', 'Arial Unicode MS']
 matplotlib.rcParams['axes.unicode_minus'] = False
@@ -11,7 +18,7 @@ matplotlib.rcParams['axes.unicode_minus'] = False
 import matplotlib.pyplot as plt
 
 # 加载真实数据
-with open('/Users/dzj/code/成语接龙/results/training_curve_dense.json') as f:
+with open(get_result_path('training_curve_dense.json')) as f:
     data = json.load(f)
 
 episodes = [d['episode'] for d in data]
@@ -22,7 +29,7 @@ full_data = {
     'episodes': episodes,
     'win_rates': win_rates,
 }
-with open('/Users/dzj/code/成语接龙/results/training_curve_real.json', 'w') as f:
+with open(get_result_path('training_curve_real.json'), 'w') as f:
     json.dump(full_data, f, indent=2)
 
 # ============================================================
@@ -59,7 +66,7 @@ ax2.set_ylim(88, 100)
 plt.tight_layout(pad=2.0)
 
 for fmt in ['png', 'pdf']:
-    path = f'/Users/dzj/code/成语接龙/results/training_curve_real.{fmt}'
+    path = get_result_path(f'training_curve_real.{fmt}')
     plt.savefig(path, dpi=300 if fmt == 'png' else None, bbox_inches='tight')
     print(f"已保存: {path}")
 

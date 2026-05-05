@@ -11,10 +11,11 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.idiom_data import IdiomDictionary
 from src.idiom_graph import IdiomGraph
+from src.config import IDIOM_FILE, get_result_path
 
 
 def main():
-    idiom_file = "/Users/dzj/code/成语接龙/data/chinese-xinhua-master/data/idiom.json"
+    idiom_file = IDIOM_FILE
     
     # 加载所有成语
     with open(idiom_file, 'r', encoding='utf-8') as f:
@@ -76,7 +77,7 @@ def main():
         print(f"\n最大分量超过1000，BFS扩展选取{len(target_comp)}个节点（保持连通）")
     
     # 保存选中的成语ID
-    output_file = "/Users/dzj/code/成语接龙/results/selected_component.json"
+    output_file = get_result_path("selected_component.json")
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     
     # 保存分量信息

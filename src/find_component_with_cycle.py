@@ -13,6 +13,7 @@ from collections import deque, defaultdict
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.idiom_data import IdiomDictionary
+from src.config import IDIOM_FILE, get_result_path
 
 
 def find_sccs(adjacency, nodes):
@@ -95,8 +96,8 @@ def find_sccs(adjacency, nodes):
 
 
 def main():
-    idiom_file = "/Users/dzj/code/成语接龙/data/chinese-xinhua-master/data/idiom.json"
-    
+    idiom_file = IDIOM_FILE
+
     with open(idiom_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
@@ -200,7 +201,7 @@ def main():
     print(f"  边数: {sum(len(v) for v in sub_adjacency.values())}")
     
     # 保存
-    output_file = "/Users/dzj/code/成语接龙/results/selected_component.json"
+    output_file = get_result_path("selected_component.json")
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     
     with open(output_file, 'w', encoding='utf-8') as f:

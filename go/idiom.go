@@ -678,6 +678,9 @@ func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	fmt.Println("========================================")
+	// 初始化项目路径
+	initPaths()
+
 	fmt.Println("成语接龙 - Go语言多核实现")
 	fmt.Printf("使用 %d 个CPU核心\n", runtime.NumCPU())
 	fmt.Println("========================================")
@@ -685,7 +688,7 @@ func main() {
 	// 加载数据
 	fmt.Println("\n[1/4] 加载成语数据...")
 	startTime := time.Now()
-	g := LoadGraph("/Users/dzj/code/成语接龙/data/chinese-xinhua-master/data/idiom.json", true)
+	g := LoadGraph(getIdiomFile(), true)
 	fmt.Printf("加载完成: %d 个成语, %.2f秒\n", g.N, time.Since(startTime).Seconds())
 
 	totalEdges := 0
@@ -753,6 +756,6 @@ func main() {
 		}
 	}
 	jsonData, _ := json.MarshalIndent(results, "", "  ")
-	os.WriteFile("/Users/dzj/code/成语接龙/results/competition_results_go.json", jsonData, 0644)
+	os.WriteFile(getResultPath("competition_results_go.json"), jsonData, 0644)
 	fmt.Println("结果保存到: results/competition_results_go.json")
 }

@@ -184,6 +184,9 @@ func main() {
 	runtime.GOMAXPROCS(runtime.NumCPU())
 	rand.Seed(time.Now().UnixNano())
 
+	// 初始化项目路径
+	initPaths()
+
 	fmt.Println("========================================")
 	fmt.Println("Q-Learning 密集采样训练 (每 10 万局评估一次)")
 	fmt.Printf("使用 %d 个CPU核心\n", runtime.NumCPU())
@@ -191,7 +194,7 @@ func main() {
 
 	// 加载
 	fmt.Println("\n[1/2] 加载成语数据...")
-	g := LoadGraph("/Users/dzj/code/成语接龙/data/chinese-xinhua-master/data/idiom.json")
+	g := LoadGraph(getIdiomFile())
 	fmt.Printf("加载完成: %d 个成语\n", g.N)
 	fmt.Println("\n[1.5/2] 剪枝...")
 	g = PruneDeadEnds(g)
@@ -349,7 +352,7 @@ func main() {
 	for i, r := range records { output[i] = OutputRecord{r.Episode, r.WinRate} }
 
 	jsonData, _ := json.MarshalIndent(output, "", "  ")
-	outPath := "/Users/dzj/code/成语接龙/results/training_curve_dense.json"
+	outPath := getResultPath("training_curve_dense.json")
 	os.WriteFile(outPath, jsonData, 0644)
 	fmt.Printf("数据保存到: %s (%d 个数据点)\n", outPath, len(output))
 

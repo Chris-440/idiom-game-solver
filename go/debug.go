@@ -7,7 +7,10 @@ import (
 )
 
 func main() {
-	data, err := os.ReadFile("/Users/dzj/code/成语接龙/data/chinese-xinhua-master/data/idiom.json")
+	// 初始化项目路径
+	initPaths()
+
+	data, err := os.ReadFile(getIdiomFile())
 	if err != nil {
 		panic(err)
 	}

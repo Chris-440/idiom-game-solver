@@ -13,6 +13,8 @@ from typing import List, Dict, Tuple
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from src.config import IDIOM_FILE
+
 from src.idiom_data import IdiomDictionary
 from src.idiom_graph import IdiomGraph
 from src.methods.value_iteration_player import ValueIterationPlayer
@@ -243,5 +245,5 @@ def run_competition(idiom_file: str, output_dir: str = 'results'):
 
 
 if __name__ == "__main__":
-    idiom_file = "/Users/dzj/code/成语接龙/data/chinese-xinhua-master/data/idiom.json"
+    idiom_file = IDIOM_FILE
     run_competition(idiom_file)

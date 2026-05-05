@@ -13,6 +13,7 @@ from src.idiom_data import IdiomDictionary
 from src.idiom_graph import IdiomGraph, GameState
 from src.sg_solver import SGSolver
 from src.minimax_solver import MinimaxSolver
+from src.config import IDIOM_FILE, get_result_path
 
 
 def load_real_idioms(filepath: str, limit: int = None) -> IdiomDictionary:
@@ -124,7 +125,7 @@ def test_scale(n_idioms: int, filepath: str):
 
 def main():
     """主函数"""
-    filepath = "/Users/dzj/code/成语接龙/data/chinese-xinhua-master/data/idiom.json"
+    filepath = IDIOM_FILE
     
     print("成语接龙大规模测试")
     print("="*50)
@@ -152,7 +153,7 @@ def main():
     
     # 保存结果
     import json
-    with open('/Users/dzj/code/成语接龙/results/large_scale_results.json', 'w', encoding='utf-8') as f:
+    with open(get_result_path('large_scale_results.json'), 'w', encoding='utf-8') as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
     
     print("\n结果已保存到 results/large_scale_results.json")

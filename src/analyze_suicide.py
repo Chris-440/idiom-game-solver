@@ -11,6 +11,10 @@ import math
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from src.config import IDIOM_FILE
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from src.idiom_data import IdiomDictionary
 from src.idiom_graph import IdiomGraph
 
@@ -168,6 +172,6 @@ def analyze_suicide(graph: IdiomGraph):
     print(f"     大部分失败是 '自己走进死胡同'，而非被对手直接击败")
 
 if __name__ == "__main__":
-    idiom_file = "/Users/dzj/code/成语接龙/data/chinese-xinhua-master/data/idiom.json"
+    idiom_file = IDIOM_FILE
     graph = load_graph(idiom_file)
     analyze_suicide(graph)

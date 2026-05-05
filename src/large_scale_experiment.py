@@ -18,6 +18,7 @@ from src.idiom_data import IdiomDictionary
 from src.idiom_graph import IdiomGraph, GameState
 from src.q_solver import ValueIterationSolver
 from src.selfplay_solver import SelfPlaySolver
+from src.config import IDIOM_FILE, RESULTS_DIR, get_result_path
 
 
 def load_all_idioms(filepath: str) -> IdiomDictionary:
@@ -286,13 +287,13 @@ def run_experiment(idiom_file: str, output_dir: str = 'results'):
 
 
 def main():
-    idiom_file = "/Users/dzj/code/成语接龙/data/chinese-xinhua-master/data/idiom.json"
-    
+    idiom_file = IDIOM_FILE
+
     if not os.path.exists(idiom_file):
         print(f"错误: 找不到成语数据文件 {idiom_file}")
         sys.exit(1)
-    
-    run_experiment(idiom_file, output_dir='results')
+
+    run_experiment(idiom_file, output_dir=RESULTS_DIR)
 
 
 if __name__ == "__main__":
