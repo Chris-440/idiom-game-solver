@@ -1,0 +1,51 @@
+Device: cuda
+Max iterations: 15000
+LR: 0.001
+Entropy: 0.05 -> 0.05
+Stage 1 max iters: 0
+Stage 2 max iters: 0
+Stage 3 mix: self=0.85 random=0.00 qtable=0.15
+Frozen update interval: 200
+Frozen win threshold: 0.55
+============================================================
+RUNNING UNIT TESTS
+============================================================
+Environment tests ALL PASSED
+  cross_attention/char: OK
+All model variant tests PASSED
+GAE tests ALL PASSED ✓
+============================================================
+ALL TESTS PASSED
+============================================================
+============================================================
+FULL TRAINING: Loading data...
+============================================================
+Loaded 30895 unique idioms, 29502 with 4 characters
+Before pruning - Idioms: 29502
+Chars: 4847 (incl PAD)
+Out-degree - mean: 24.2, median: 12, max: 600, zero-out-degree: 3183
+  Pruning: removed 3394 cheating idioms, 26108 valid idioms remaining
+After pruning - Idioms: 26108
+Zero-out-degree remaining: 0
+Data validation ALL PASSED
+Uniform start - mean steps: 249.6, 0-step ratio: 0.0%
+Filtered start - mean steps: 243.3, 0-step ratio: 0.0%
+99th percentile steps: 579 -> suggested max_history_len = 579
+  p99=579, keeping max_history_len=64
+============================================================
+FULL TRAINING: Creating model...
+============================================================
+Model parameters: 3,996,866
+Device: cuda
+Resuming from checkpoints/ckpt_iter001500.pt
+Resumed from iteration 1500
+============================================================
+FULL TRAINING: Starting...
+============================================================
+============================================================
+FULL TRAINING: Loading Q-table opponent...
+============================================================
+Q-table loaded: 26108 nodes, vs_random=0.9985
+============================================================
+FULL TRAINING: Starting...
+============================================================

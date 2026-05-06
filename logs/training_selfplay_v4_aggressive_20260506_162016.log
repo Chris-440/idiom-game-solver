@@ -1,0 +1,69 @@
+Device: cuda
+Max iterations: 15000
+LR: 0.0003
+Entropy: 0.05 -> 0.03
+Stage 1 max iters: 0
+Stage 2 max iters: 0
+Stage 3 mix: self=1.00 random=0.00 qtable=0.00
+Frozen update interval: 200
+Frozen win threshold: 0.55
+============================================================
+RUNNING UNIT TESTS
+============================================================
+Environment tests ALL PASSED
+  cross_attention/char: OK
+All model variant tests PASSED
+GAE tests ALL PASSED ✓
+============================================================
+ALL TESTS PASSED
+============================================================
+============================================================
+FULL TRAINING: Loading data...
+============================================================
+Loaded 30895 unique idioms, 29502 with 4 characters
+Before pruning - Idioms: 29502
+Chars: 4847 (incl PAD)
+Out-degree - mean: 24.2, median: 12, max: 600, zero-out-degree: 3183
+  Pruning: removed 3394 cheating idioms, 26108 valid idioms remaining
+After pruning - Idioms: 26108
+Zero-out-degree remaining: 0
+Data validation ALL PASSED
+Uniform start - mean steps: 250.8, 0-step ratio: 0.0%
+Filtered start - mean steps: 242.3, 0-step ratio: 0.0%
+99th percentile steps: 602 -> suggested max_history_len = 602
+  p99=602, keeping max_history_len=64
+============================================================
+FULL TRAINING: Creating model...
+============================================================
+Model parameters: 3,996,866
+Device: cuda
+Resuming from checkpoints/ckpt_iter000500.pt
+Resumed from iteration 500
+============================================================
+FULL TRAINING: Starting...
+============================================================
+============================================================
+FULL TRAINING: Loading Q-table opponent...
+============================================================
+Q-table loaded: 26108 nodes, vs_random=0.9985
+============================================================
+FULL TRAINING: Starting...
+============================================================
+[Iter   550 | Stage 3] vs_rand=1.000 vs_qt=0.728 vs_frz=N/A ploss=-0.0182 vloss=0.1033 ent=0.319 len=12.8 trunc=0.0%
+[Iter   600 | Stage 3] vs_rand=0.999 vs_qt=0.706 vs_frz=N/A ploss=-0.0097 vloss=0.1089 ent=0.310 len=12.3 trunc=0.0%
+[Iter   650 | Stage 3] vs_rand=0.999 vs_qt=0.728 vs_frz=N/A ploss=-0.0114 vloss=0.0860 ent=0.321 len=11.7 trunc=0.0%
+[Iter   700 | Stage 3] vs_rand=1.000 vs_qt=0.748 vs_frz=N/A ploss=-0.0024 vloss=0.0781 ent=0.304 len=12.0 trunc=0.0%
+>>> Training objective achieved! iter=751
+[Iter   750 | Stage 3] vs_rand=0.999 vs_qt=0.786 vs_frz=N/A ploss=-0.0070 vloss=0.0648 ent=0.283 len=11.3 trunc=0.0%
+>>> Training objective achieved! iter=801
+[Iter   800 | Stage 3] vs_rand=0.996 vs_qt=0.777 vs_frz=N/A ploss=-0.0070 vloss=0.0663 ent=0.326 len=10.6 trunc=0.0%
+>>> Training objective achieved! iter=851
+[Iter   850 | Stage 3] vs_rand=1.000 vs_qt=0.796 vs_frz=N/A ploss=-0.0079 vloss=0.0459 ent=0.329 len=9.2 trunc=0.0%
+>>> Training objective achieved! iter=901
+[Iter   900 | Stage 3] vs_rand=1.000 vs_qt=0.794 vs_frz=N/A ploss=-0.0074 vloss=0.0648 ent=0.306 len=10.2 trunc=0.0%
+>>> Training objective achieved! iter=951
+[Iter   950 | Stage 3] vs_rand=1.000 vs_qt=0.790 vs_frz=N/A ploss=-0.0036 vloss=0.0321 ent=0.290 len=10.3 trunc=0.0%
+>>> Training objective achieved! iter=1001
+[Iter  1000 | Stage 3] vs_rand=1.000 vs_qt=0.792 vs_frz=N/A ploss=-0.0002 vloss=0.0394 ent=0.255 len=10.6 trunc=0.0%
+>>> Training objective achieved! iter=1051
+[Iter  1050 | Stage 3] vs_rand=0.998 vs_qt=0.823 vs_frz=N/A ploss=-0.0078 vloss=0.0399 ent=0.269 len=11.9 trunc=0.0%

@@ -1,0 +1,64 @@
+Device: cuda
+Max iterations: 15000
+LR: 0.0003
+Stage 1 max iters: 0
+Stage 2 max iters: 0
+Stage 3 mix: self=1.00 random=0.00 qtable=0.00
+Frozen update interval: 200
+Frozen win threshold: 0.55
+============================================================
+RUNNING UNIT TESTS
+============================================================
+Environment tests ALL PASSED
+  cross_attention/char: OK
+All model variant tests PASSED
+GAE tests ALL PASSED ✓
+============================================================
+ALL TESTS PASSED
+============================================================
+============================================================
+FULL TRAINING: Loading data...
+============================================================
+Loaded 30895 unique idioms, 29502 with 4 characters
+Before pruning - Idioms: 29502
+Chars: 4847 (incl PAD)
+Out-degree - mean: 24.2, median: 12, max: 600, zero-out-degree: 3183
+  Pruning: removed 3394 cheating idioms, 26108 valid idioms remaining
+After pruning - Idioms: 26108
+Zero-out-degree remaining: 0
+Data validation ALL PASSED
+Uniform start - mean steps: 238.1, 0-step ratio: 0.0%
+Filtered start - mean steps: 246.2, 0-step ratio: 0.0%
+99th percentile steps: 622 -> suggested max_history_len = 622
+  p99=622, keeping max_history_len=64
+============================================================
+FULL TRAINING: Creating model...
+============================================================
+Model parameters: 3,996,866
+Device: cuda
+============================================================
+FULL TRAINING: Starting...
+============================================================
+============================================================
+FULL TRAINING: Loading Q-table opponent...
+============================================================
+Q-table loaded: 26108 nodes, vs_random=0.9985
+============================================================
+FULL TRAINING: Starting...
+============================================================
+>>> Stage 1 max iters reached, advancing to Stage 2, iter=1
+>>> Stage 2 max iters reached, advancing to Stage 3, iter=1
+  [Frozen opponent updated] vs_frozen=0.705 > 0.55
+[Iter     0 | Stage 3] vs_rand=0.610 vs_qt=0.000 vs_frz=0.705 ploss=0.1337 vloss=0.1455 ent=0.084 len=64.8 trunc=0.0%
+[Iter    50 | Stage 3] vs_rand=0.901 vs_qt=0.016 vs_frz=N/A ploss=0.0039 vloss=0.2665 ent=0.012 len=10.5 trunc=0.0%
+[Iter   100 | Stage 3] vs_rand=0.907 vs_qt=0.014 vs_frz=N/A ploss=0.0008 vloss=0.0006 ent=0.011 len=7.6 trunc=0.0%
+[Iter   150 | Stage 3] vs_rand=0.959 vs_qt=0.055 vs_frz=N/A ploss=0.0033 vloss=0.0004 ent=0.020 len=6.6 trunc=0.0%
+  [Frozen opponent updated] vs_frozen=1.000 > 0.55
+[Iter   200 | Stage 3] vs_rand=0.949 vs_qt=0.019 vs_frz=1.000 ploss=-0.0026 vloss=0.0004 ent=0.015 len=6.3 trunc=0.0%
+[Iter   250 | Stage 3] vs_rand=0.958 vs_qt=0.033 vs_frz=N/A ploss=-0.0001 vloss=0.0322 ent=0.013 len=7.8 trunc=0.0%
+[Iter   300 | Stage 3] vs_rand=0.963 vs_qt=0.021 vs_frz=N/A ploss=-0.0003 vloss=0.0080 ent=0.014 len=7.4 trunc=0.0%
+[Iter   350 | Stage 3] vs_rand=0.954 vs_qt=0.026 vs_frz=N/A ploss=-0.0010 vloss=0.0157 ent=0.010 len=7.0 trunc=0.0%
+  [Frozen opponent updated] vs_frozen=0.968 > 0.55
+[Iter   400 | Stage 3] vs_rand=0.938 vs_qt=0.025 vs_frz=0.968 ploss=0.0017 vloss=0.0152 ent=0.007 len=7.0 trunc=0.0%
+[Iter   450 | Stage 3] vs_rand=0.951 vs_qt=0.050 vs_frz=N/A ploss=-0.0004 vloss=0.0175 ent=0.028 len=6.4 trunc=0.0%
+[Iter   500 | Stage 3] vs_rand=0.960 vs_qt=0.031 vs_frz=N/A ploss=0.0058 vloss=0.0148 ent=0.026 len=6.1 trunc=0.0%
