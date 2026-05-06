@@ -34,3 +34,15 @@ logs/
 go/idiom
 go/train_dense
 go/debug
+# Claude
+.claude/
+
+# Checkpoints (too large for git)
+checkpoints/
+*.tar.gz
+
+# Backups
+backups/
+
+# Jupyter
+.ipynb_checkpoints/

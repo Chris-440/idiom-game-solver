@@ -1,22 +1,52 @@
 import torch
 import numpy as np
 import os
+import copy
 from torch.utils.tensorboard import SummaryWriter
 from .rollout import collect_rollouts, collect_rollouts_vs_policy
 from .ppo import prepare_training_batch, ppo_update
-from .evaluation import evaluate_vs_random, evaluate_vs_policy, export_game_trace
+from .evaluation import evaluate_vs_random, evaluate_vs_policy, evaluate_vs_frozen, export_game_trace
 
 
 class CurriculumScheduler:
-    """Three-stage curriculum learning scheduler."""
+    """Three-stage curriculum learning scheduler with configurable stage limits."""
 
-    def __init__(self):
+    def __init__(self, config):
         self.stage = 1
         self.iteration = 0
         self.stage_start_iter = 0
         self.recent_eval_results = []
+        self.stage_max_iters = {
+            1: getattr(config, 'stage1_max_iters', 999999),
+            2: getattr(config, 'stage2_max_iters', 999999),
+        }
+        self.stage3_mix = {
+            'random': getattr(config, 'stage3_random_ratio', 0.0),
+            'self': getattr(config, 'stage3_self_ratio', 1.0),
+            'qtable': getattr(config, 'stage3_qtable_ratio', 0.0),
+        }
+        # Normalize stage3 mix to sum to 1.0
+        total = sum(self.stage3_mix.values())
+        if total > 0:
+            for k in self.stage3_mix:
+                self.stage3_mix[k] /= total
+
+    def _force_advance(self):
+        """Advance stage(s) if current stage has exceeded max iterations."""
+        while self.stage < 3:
+            max_iter = self.stage_max_iters.get(self.stage, 999999)
+            iters_in_stage = self.iteration - self.stage_start_iter
+            if iters_in_stage >= max_iter:
+                self.stage += 1
+                self.stage_start_iter = self.iteration
+                self.recent_eval_results = []
+                print(f">>> Stage {self.stage - 1} max iters reached, advancing to Stage {self.stage}, iter={self.iteration}")
+            else:
+                break
 
     def get_opponent_mix(self):
+        self._force_advance()
+
         if self.stage == 1:
             return {'random': 1.0, 'self': 0.0, 'qtable': 0.0}
 
@@ -30,7 +60,7 @@ class CurriculumScheduler:
             }
 
         elif self.stage == 3:
-            return {'random': 0.1, 'self': 0.7, 'qtable': 0.2}
+            return dict(self.stage3_mix)
 
         else:
             return {'random': 0.1, 'self': 0.9, 'qtable': 0.0}
@@ -89,7 +119,7 @@ def train(model, data, config, q_table_policy=None, resume_state=None):
         T_max=config.max_iterations,
         eta_min=config.lr * 0.1,
     )
-    curriculum = CurriculumScheduler()
+    curriculum = CurriculumScheduler(config)
 
     start_iteration = 0
     if resume_state is not None:
@@ -104,12 +134,21 @@ def train(model, data, config, q_table_policy=None, resume_state=None):
     n_idioms = data['n_idioms']
     device = config.device
 
+    # Create frozen opponent for self-play (optional)
+    use_frozen = getattr(config, 'use_frozen_opponent', True)
+    opponent_model = None
+    if use_frozen:
+        opponent_model = copy.deepcopy(model)
+        opponent_model.eval()
+        for p in opponent_model.parameters():
+            p.requires_grad = False
+
     os.makedirs(config.ckpt_dir, exist_ok=True)
     writer = SummaryWriter(config.tensorboard_dir)
 
     log = {
         'iteration': [], 'stage': [],
-        'vs_random': [], 'vs_qtable': [],
+        'vs_random': [], 'vs_qtable': [], 'vs_frozen': [],
         'policy_loss': [], 'value_loss': [],
         'entropy': [], 'grad_norm': [],
         'game_length': [],
@@ -135,7 +174,8 @@ def train(model, data, config, q_table_policy=None, resume_state=None):
                 max_history_len=config.max_history_len,
                 max_actions=config.max_actions,
                 max_game_steps=config.max_game_steps,
-                opponent='self', device=device
+                opponent='self', device=device,
+                opponent_model=opponent_model
             )
             all_trajectories.extend(trajs)
 
@@ -218,6 +258,18 @@ def train(model, data, config, q_table_policy=None, resume_state=None):
                     n_games=config.eval_games, device=device
                 )
 
+            # Frozen opponent evaluation and update
+            wr_frozen = None
+            if use_frozen and iteration % config.frozen_update_interval == 0:
+                wr_frozen, _, _ = evaluate_vs_frozen(
+                    model, opponent_model, adj_list, n_idioms,
+                    config.max_history_len, config.max_actions,
+                    n_games=config.frozen_eval_games, device=device
+                )
+                if wr_frozen > config.frozen_win_threshold:
+                    opponent_model.load_state_dict(model.state_dict())
+                    print(f"  [Frozen opponent updated] vs_frozen={wr_frozen:.3f} > {config.frozen_win_threshold}")
+
             eval_results = {'vs_random': wr_random,
                            'vs_qtable': wr_qtable if wr_qtable is not None else 0.0}
             curriculum.should_advance(eval_results)
@@ -229,6 +281,8 @@ def train(model, data, config, q_table_policy=None, resume_state=None):
             writer.add_scalar('eval/vs_random', wr_random, iteration)
             if wr_qtable is not None:
                 writer.add_scalar('eval/vs_qtable', wr_qtable, iteration)
+            if wr_frozen is not None:
+                writer.add_scalar('eval/vs_frozen', wr_frozen, iteration)
             writer.add_scalar('eval/game_length', avg_length, iteration)
             writer.add_scalar('eval/truncated_ratio', truncated_ratio, iteration)
             writer.add_scalar('train/policy_loss', avg_metrics['policy_loss'], iteration)
@@ -252,8 +306,9 @@ def train(model, data, config, q_table_policy=None, resume_state=None):
             writer.add_text('trace/game', str(trace[-1]), iteration)
 
             qt_str = f"{wr_qtable:.3f}" if wr_qtable is not None else "N/A"
+            fr_str = f"{wr_frozen:.3f}" if wr_frozen is not None else "N/A"
             print(f"[Iter {iteration:5d} | Stage {curriculum.stage}] "
-                  f"vs_rand={wr_random:.3f} vs_qt={qt_str} "
+                  f"vs_rand={wr_random:.3f} vs_qt={qt_str} vs_frz={fr_str} "
                   f"ploss={avg_metrics.get('policy_loss', 0):.4f} "
                   f"vloss={avg_metrics.get('value_loss', 0):.4f} "
                   f"ent={avg_metrics.get('entropy', 0):.3f} "
@@ -263,6 +318,7 @@ def train(model, data, config, q_table_policy=None, resume_state=None):
             log['stage'].append(curriculum.stage)
             log['vs_random'].append(wr_random)
             log['vs_qtable'].append(wr_qtable if wr_qtable is not None else 0.0)
+            log['vs_frozen'].append(wr_frozen)
             log['game_length'].append(avg_length)
             for k, v in avg_metrics.items():
                 log.setdefault(k, []).append(v)

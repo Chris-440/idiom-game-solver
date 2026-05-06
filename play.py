@@ -105,10 +105,10 @@ def main():
             top_probs, top_idx = probs[:len(legal)].topk(top_k)
             print(f"--- 模型回合 (当前: {idioms[game.current]}, 尾字: '{idioms[game.current][-1]}') ---")
             v = value.item()
-if v > 0.3:    judgment = "乐观"
-elif v > -0.3: judgment = "均势"
-else:          judgment = "悲观"
-print(f"模型判断: {judgment} (value={v:+.3f})")
+            if v > 0.3:    judgment = "乐观"
+            elif v > -0.3: judgment = "均势"
+            else:          judgment = "悲观"
+            print(f"模型判断: {judgment} (value={v:+.3f})")
             print(f"Top-{top_k}:")
             for rank, (i, p) in enumerate(zip(top_idx.tolist(), top_probs.tolist()), 1):
                 idiom = idioms[int(legal[i])]

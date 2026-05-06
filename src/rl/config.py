@@ -20,14 +20,14 @@ class RLConfig:
         self.max_actions = 600
 
         # --- PPO ---
-        self.lr = 3e-4
+        self.lr = 1e-3
         self.gamma = 0.99
         self.gae_lambda = 0.95
-        self.clip_eps = 0.2
+        self.clip_eps = 0.4
         self.value_coef = 0.5
-        self.entropy_coef_start = 0.02
-        self.entropy_coef_end = 0.001
-        self.ppo_epochs = 6
+        self.entropy_coef_start = 0.05
+        self.entropy_coef_end = 0.05
+        self.ppo_epochs = 1
         self.batch_size = 2048
 
         # --- Training ---
@@ -36,6 +36,21 @@ class RLConfig:
         self.eval_interval = 50
         self.eval_games = 800
         self.save_interval = 500
+
+        # --- Curriculum stage limits (0 = skip, large = no effect) ---
+        self.stage1_max_iters = 999999
+        self.stage2_max_iters = 999999
+
+        # --- Frozen opponent (self-play) ---
+        self.use_frozen_opponent = True    # set False for pure same-model self-play
+        self.frozen_update_interval = 200  # eval vs frozen every N iters
+        self.frozen_win_threshold = 0.55   # update frozen if win rate > this
+        self.frozen_eval_games = 400       # games per frozen eval
+
+        # --- Stage 3 opponent mix (pure self-play by default) ---
+        self.stage3_self_ratio = 1.0
+        self.stage3_random_ratio = 0.0
+        self.stage3_qtable_ratio = 0.0
 
         # --- Paths ---
         project_root = os.path.dirname(os.path.dirname(os.path.dirname(

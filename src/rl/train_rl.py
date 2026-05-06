@@ -113,6 +113,28 @@ def main():
                         help='Override device (cpu/cuda/mps)')
     parser.add_argument('--lr', type=float, default=None,
                         help='Override learning rate')
+    parser.add_argument('--entropy-start', type=float, default=None,
+                        help='Override entropy_coef_start')
+    parser.add_argument('--entropy-end', type=float, default=None,
+                        help='Override entropy_coef_end')
+    parser.add_argument('--clip-eps', type=float, default=None,
+                        help='Override PPO clip_eps')
+    parser.add_argument('--stage1-max-iters', type=int, default=None,
+                        help='Max iterations in stage 1 (0 to skip)')
+    parser.add_argument('--stage2-max-iters', type=int, default=None,
+                        help='Max iterations in stage 2 (0 to skip)')
+    parser.add_argument('--stage3-self-ratio', type=float, default=None,
+                        help='Self-play ratio in stage 3')
+    parser.add_argument('--stage3-random-ratio', type=float, default=None,
+                        help='Random opponent ratio in stage 3')
+    parser.add_argument('--stage3-qtable-ratio', type=float, default=None,
+                        help='Q-table opponent ratio in stage 3')
+    parser.add_argument('--frozen-update-interval', type=int, default=None,
+                        help='Evaluate vs frozen opponent every N iters')
+    parser.add_argument('--frozen-win-threshold', type=float, default=None,
+                        help='Win rate threshold to update frozen opponent')
+    parser.add_argument('--no-frozen', action='store_true',
+                        help='Disable frozen opponent (pure same-model self-play)')
     args = parser.parse_args()
 
     config = RLConfig()
@@ -123,10 +145,38 @@ def main():
         config.device = args.device
     if args.lr is not None:
         config.lr = args.lr
+    if args.entropy_start is not None:
+        config.entropy_coef_start = args.entropy_start
+    if args.entropy_end is not None:
+        config.entropy_coef_end = args.entropy_end
+    if args.clip_eps is not None:
+        config.clip_eps = args.clip_eps
+    if args.stage1_max_iters is not None:
+        config.stage1_max_iters = args.stage1_max_iters
+    if args.stage2_max_iters is not None:
+        config.stage2_max_iters = args.stage2_max_iters
+    if args.stage3_self_ratio is not None:
+        config.stage3_self_ratio = args.stage3_self_ratio
+    if args.stage3_random_ratio is not None:
+        config.stage3_random_ratio = args.stage3_random_ratio
+    if args.stage3_qtable_ratio is not None:
+        config.stage3_qtable_ratio = args.stage3_qtable_ratio
+    if args.frozen_update_interval is not None:
+        config.frozen_update_interval = args.frozen_update_interval
+    if args.frozen_win_threshold is not None:
+        config.frozen_win_threshold = args.frozen_win_threshold
+    if args.no_frozen:
+        config.use_frozen_opponent = False
 
     print(f"Device: {config.device}")
     print(f"Max iterations: {config.max_iterations}")
     print(f"LR: {config.lr}")
+    print(f"Entropy: {config.entropy_coef_start} -> {config.entropy_coef_end}")
+    print(f"Stage 1 max iters: {config.stage1_max_iters}")
+    print(f"Stage 2 max iters: {config.stage2_max_iters}")
+    print(f"Stage 3 mix: self={config.stage3_self_ratio:.2f} random={config.stage3_random_ratio:.2f} qtable={config.stage3_qtable_ratio:.2f}")
+    print(f"Frozen update interval: {config.frozen_update_interval}")
+    print(f"Frozen win threshold: {config.frozen_win_threshold}")
 
     if args.test:
         run_tests()

@@ -140,22 +140,31 @@ def prepare_batch_input(games, max_history_len, max_actions, device='cuda'):
 
 def collect_rollouts(model, adj_list, n_idioms, n_games,
                      max_history_len, max_actions, max_game_steps=200,
-                     opponent='self', model_player=None, device='cuda'):
+                     opponent='self', model_player=None, device='cuda',
+                     opponent_model=None):
     """Vectorized rollout.
 
-    opponent='self':     both sides are the model.
-                         Produces 2 trajectories per game (P0 + P1 perspectives).
+    opponent='self', opponent_model=None:
+        Both sides are the current model.
+        Produces 2 trajectories per game (P0 + P1 perspectives).
 
-    opponent='random':   model vs random.
-                         Produces 1 trajectory per game (model's perspective).
-                         model_player alternates first/second.
+    opponent='self', opponent_model is not None:
+        Model vs frozen opponent. Model alternates first/second.
+        Frozen opponent plays deterministically.
+        Produces 1 trajectory per game (model's perspective only).
 
-    max_game_steps:      hard game truncation limit.
-                         Truncated games get terminal_reward=0 (draw).
+    opponent='random':
+        Model vs random. model_player alternates first/second.
+        Produces 1 trajectory per game (model's perspective).
+
+    max_game_steps: hard game truncation limit.
+                    Truncated games get terminal_reward=0 (draw).
 
     Returns: list of Trajectory.
     """
     model.eval()
+    if opponent_model is not None:
+        opponent_model.eval()
     max_steps = max_game_steps
 
     # ---- init all games ----
@@ -163,8 +172,15 @@ def collect_rollouts(model, adj_list, n_idioms, n_games,
     for g in games:
         g.reset()
 
-    if opponent == 'self':
-        # Two trajectories per game: P0 and P1 perspectives
+    frozen_mode = (opponent_model is not None)
+
+    if frozen_mode:
+        trajectories = [Trajectory() for _ in range(n_games)]
+        if model_player is not None:
+            model_players = np.full(n_games, model_player, dtype=np.int32)
+        else:
+            model_players = np.arange(n_games, dtype=np.int32) % 2
+    elif opponent == 'self':
         trajectories = []
         for _ in range(n_games):
             trajectories.append(Trajectory())  # player 0
@@ -183,19 +199,25 @@ def collect_rollouts(model, adj_list, n_idioms, n_games,
     while len(active) > 0 and step_count < max_steps:
         active_games = [games[i] for i in active]
 
-        # Separate model-turn vs opponent-turn games
+        # Separate model-turn vs opponent-turn vs frozen-turn games
         model_indices = []
+        frozen_indices = []
         opponent_indices = []
 
         for local_idx, orig_idx in enumerate(active):
             g = active_games[local_idx]
             cp = g.current_player
-            if opponent == 'self' or cp == model_players[orig_idx]:
+            if frozen_mode:
+                if cp == model_players[orig_idx]:
+                    model_indices.append((local_idx, orig_idx, cp))
+                else:
+                    frozen_indices.append(local_idx)
+            elif opponent == 'self' or cp == model_players[orig_idx]:
                 model_indices.append((local_idx, orig_idx, cp))
             else:
                 opponent_indices.append(local_idx)
 
-        # ---- Batched model inference ----
+        # ---- Batched model inference (current model, stochastic) ----
         if model_indices:
             batch_games = [active_games[i] for i, _, _ in model_indices]
             batch = prepare_batch_input(batch_games, max_history_len,
@@ -214,7 +236,9 @@ def collect_rollouts(model, adj_list, n_idioms, n_games,
                 act_idx = action_indices[i].item()
                 action = int(legal[act_idx])
 
-                if opponent == 'self':
+                if frozen_mode:
+                    traj = trajectories[orig_idx]
+                elif opponent == 'self':
                     traj = trajectories[orig_idx * 2 + cp]
                 else:
                     traj = trajectories[orig_idx]
@@ -233,6 +257,26 @@ def collect_rollouts(model, adj_list, n_idioms, n_games,
                 )
                 game.step(action)
 
+        # ---- Frozen opponent turns (deterministic) ----
+        if frozen_indices:
+            batch_games = [active_games[i] for i in frozen_indices]
+            batch = prepare_batch_input(batch_games, max_history_len,
+                                        max_actions, device)
+
+            with torch.no_grad():
+                action_indices, _, _ = opponent_model.get_action(
+                    batch['u_ids'], batch['history_ids'], batch['history_mask'],
+                    batch['candidate_ids'], batch['candidate_mask'],
+                    batch['player_ids'], deterministic=True
+                )
+
+            for i, local_idx in enumerate(frozen_indices):
+                game = active_games[local_idx]
+                legal = batch['legal_actions'][i]
+                act_idx = action_indices[i].item()
+                action = int(legal[act_idx])
+                game.step(action)
+
         # ---- Opponent turns (random) ----
         if opponent_indices:
             for local_idx in opponent_indices:
@@ -247,8 +291,10 @@ def collect_rollouts(model, adj_list, n_idioms, n_games,
                 still_active.append(orig_idx)
             else:
                 game = active_games[local_idx]
-                if opponent == 'self':
-                    # Set winner_is_me for both P0 and P1 trajectories
+                if frozen_mode:
+                    trajectories[orig_idx].set_result(
+                        winner_is_me=(game.winner == model_players[orig_idx]))
+                elif opponent == 'self':
                     trajectories[orig_idx * 2].set_result(
                         winner_is_me=(game.winner == 0))
                     trajectories[orig_idx * 2 + 1].set_result(
@@ -262,7 +308,10 @@ def collect_rollouts(model, adj_list, n_idioms, n_games,
     # Handle truncated games (hit max_steps before natural termination)
     for i, g in enumerate(games):
         if not g.done:
-            if opponent == 'self':
+            if frozen_mode:
+                if trajectories[i].length > 0:
+                    trajectories[i].set_truncated()
+            elif opponent == 'self':
                 for ti in [i * 2, i * 2 + 1]:
                     if trajectories[ti].length > 0:
                         trajectories[ti].set_truncated()
