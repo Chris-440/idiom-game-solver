@@ -1,71 +1,71 @@
 [
   {
     "episode": 0,
-    "win_rate": 45.1
+    "win_rate": 47.8
   },
   {
     "episode": 100000,
-    "win_rate": 90
+    "win_rate": 89.3
   },
   {
     "episode": 200000,
-    "win_rate": 91
+    "win_rate": 89
   },
   {
     "episode": 300000,
-    "win_rate": 92.3
+    "win_rate": 90.4
   },
   {
     "episode": 400000,
-    "win_rate": 89.4
+    "win_rate": 92.2
   },
   {
     "episode": 500000,
-    "win_rate": 91.5
+    "win_rate": 91.2
   },
   {
     "episode": 600000,
-    "win_rate": 92.9
+    "win_rate": 93.8
   },
   {
     "episode": 700000,
-    "win_rate": 93.2
+    "win_rate": 91.6
   },
   {
     "episode": 800000,
-    "win_rate": 94.2
+    "win_rate": 92.9
   },
   {
     "episode": 900000,
-    "win_rate": 92.6
+    "win_rate": 92.7
   },
   {
     "episode": 1000000,
-    "win_rate": 94.2
+    "win_rate": 92.5
   },
   {
     "episode": 1100000,
-    "win_rate": 94.8
+    "win_rate": 93.2
   },
   {
     "episode": 1200000,
-    "win_rate": 94.2
+    "win_rate": 93.6
   },
   {
     "episode": 1300000,
-    "win_rate": 94.4
+    "win_rate": 96.7
   },
   {
     "episode": 1400000,
-    "win_rate": 95.2
+    "win_rate": 95.1
   },
   {
     "episode": 1500000,
-    "win_rate": 93.9
+    "win_rate": 95.1
   },
   {
     "episode": 1600000,
-    "win_rate": 92.8
+    "win_rate": 94.8
   },
   {
     "episode": 1700000,
@@ -73,134 +73,134 @@
   },
   {
     "episode": 1800000,
-    "win_rate": 95.7
+    "win_rate": 95.8
   },
   {
     "episode": 1900000,
-    "win_rate": 95.4
+    "win_rate": 93.8
   },
   {
     "episode": 2000000,
-    "win_rate": 94.8
+    "win_rate": 94.7
   },
   {
     "episode": 2100000,
-    "win_rate": 94.2
+    "win_rate": 96
   },
   {
     "episode": 2200000,
-    "win_rate": 95.2
-  },
-  {
-    "episode": 2300000,
-    "win_rate": 92.9
-  },
-  {
-    "episode": 2400000,
-    "win_rate": 96.1
-  },
-  {
-    "episode": 2500000,
-    "win_rate": 96.7
-  },
-  {
-    "episode": 2600000,
-    "win_rate": 95.3
-  },
-  {
-    "episode": 2700000,
-    "win_rate": 94.9
-  },
-  {
-    "episode": 2800000,
-    "win_rate": 94.2
-  },
-  {
-    "episode": 2900000,
-    "win_rate": 97
-  },
-  {
-    "episode": 3000000,
-    "win_rate": 96
-  },
-  {
-    "episode": 3100000,
-    "win_rate": 95.3
-  },
-  {
-    "episode": 3200000,
-    "win_rate": 97.3
-  },
-  {
-    "episode": 3300000,
-    "win_rate": 96.2
-  },
-  {
-    "episode": 3400000,
-    "win_rate": 93.9
-  },
-  {
-    "episode": 3500000,
-    "win_rate": 96.6
-  },
-  {
-    "episode": 3600000,
-    "win_rate": 95.8
-  },
-  {
-    "episode": 3700000,
-    "win_rate": 96
-  },
-  {
-    "episode": 3800000,
     "win_rate": 95
   },
   {
-    "episode": 3900000,
-    "win_rate": 95.2
-  },
-  {
-    "episode": 4000000,
-    "win_rate": 94.6
-  },
-  {
-    "episode": 4100000,
-    "win_rate": 93.1
-  },
-  {
-    "episode": 4200000,
+    "episode": 2300000,
     "win_rate": 95.4
   },
   {
-    "episode": 4300000,
+    "episode": 2400000,
+    "win_rate": 95.9
+  },
+  {
+    "episode": 2500000,
+    "win_rate": 96
+  },
+  {
+    "episode": 2600000,
     "win_rate": 95.8
   },
   {
+    "episode": 2700000,
+    "win_rate": 94.2
+  },
+  {
+    "episode": 2800000,
+    "win_rate": 95.1
+  },
+  {
+    "episode": 2900000,
+    "win_rate": 95.7
+  },
+  {
+    "episode": 3000000,
+    "win_rate": 96.1
+  },
+  {
+    "episode": 3100000,
+    "win_rate": 95.4
+  },
+  {
+    "episode": 3200000,
+    "win_rate": 95.4
+  },
+  {
+    "episode": 3300000,
+    "win_rate": 96.7
+  },
+  {
+    "episode": 3400000,
+    "win_rate": 95.4
+  },
+  {
+    "episode": 3500000,
+    "win_rate": 95.7
+  },
+  {
+    "episode": 3600000,
+    "win_rate": 96.1
+  },
+  {
+    "episode": 3700000,
+    "win_rate": 96.7
+  },
+  {
+    "episode": 3800000,
+    "win_rate": 96
+  },
+  {
+    "episode": 3900000,
+    "win_rate": 96.7
+  },
+  {
+    "episode": 4000000,
+    "win_rate": 96.5
+  },
+  {
+    "episode": 4100000,
+    "win_rate": 96.7
+  },
+  {
+    "episode": 4200000,
+    "win_rate": 94.4
+  },
+  {
+    "episode": 4300000,
+    "win_rate": 97.1
+  },
+  {
     "episode": 4400000,
-    "win_rate": 96.6
+    "win_rate": 96.7
   },
   {
     "episode": 4500000,
-    "win_rate": 95.9
+    "win_rate": 96.3
   },
   {
     "episode": 4600000,
-    "win_rate": 96.2
+    "win_rate": 96.3
   },
   {
     "episode": 4700000,
-    "win_rate": 95.9
+    "win_rate": 97.3
   },
   {
     "episode": 4800000,
-    "win_rate": 95.9
+    "win_rate": 95.6
   },
   {
     "episode": 4900000,
-    "win_rate": 97
+    "win_rate": 95.9
   },
   {
     "episode": 5000000,
-    "win_rate": 95.2
+    "win_rate": 96
   }
 ]
