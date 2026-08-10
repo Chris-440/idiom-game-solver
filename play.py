@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Interactive play: you vs trained RL model."""
 
-import sys, os, torch, numpy as np
+import os
+import sys
+
+import torch
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from src.rl.config import RLConfig
@@ -24,14 +27,15 @@ def main():
         return
     ckpt_path = os.path.join('checkpoints', ckpt_files[-1])
     print(f"Loading {ckpt_path}")
-    ckpt = torch.load(ckpt_path, map_location='cuda', weights_only=False)
+    device = config.device
+    ckpt = torch.load(ckpt_path, map_location=device, weights_only=False)
 
     model = PolicyValueNet(n_idioms=data['n_idioms'], n_chars=data['n_chars'],
                            idiom_dim=config.idiom_dim, n_heads=config.n_heads,
                            n_layers=config.n_layers)
     model.idiom_emb.set_idiom_chars(data['idiom_chars'])
     model.load_state_dict(ckpt['model'])
-    model.to('cuda')
+    model.to(device)
     model.eval()
 
     stage = ckpt.get('curriculum_stage', '?')
@@ -92,8 +96,11 @@ def main():
         else:
             # Model's turn
             inp = prepare_batch_input([game], config.max_history_len,
-                                       config.max_actions, 'cuda')
-            with torch.no_grad(), torch.amp.autocast('cuda', dtype=torch.bfloat16):
+                                       config.max_actions, device)
+            with torch.no_grad(), torch.amp.autocast(
+                    device_type=device,
+                    dtype=torch.bfloat16,
+                    enabled=(device == 'cuda')):
                 logits, value = model(
                     inp['u_ids'], inp['history_ids'], inp['history_mask'],
                     inp['candidate_ids'], inp['candidate_mask'],

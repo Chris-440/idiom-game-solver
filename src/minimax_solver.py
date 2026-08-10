@@ -4,9 +4,7 @@ Minimax + Alpha-Beta 剪枝求解器
 用于成语接龙博弈的精确求解
 """
 
-from typing import Dict, List, Set, Tuple, Optional
-from collections import defaultdict
-import sys
+from typing import Dict, List, Tuple, Optional
 import time
 
 from .idiom_graph import IdiomGraph, GameState

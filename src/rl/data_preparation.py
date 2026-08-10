@@ -1,7 +1,6 @@
 import json
 import numpy as np
 from collections import defaultdict
-import os
 
 
 def load_and_index(idiom_path=None):
@@ -96,8 +95,8 @@ def prune_dead_ends(idioms, adj_list, idiom_chars):
 
     Mirrors Go code's PruneDeadEnds: repeatedly removes nodes that have
     no valid successors, until every remaining node has at least one
-    valid successor.  This eliminates "cheating" idioms that make the
-    game trivially easy (paper: 3,394 removed from 29,502).
+    valid successor. This removes 3,394 iterative dead-end nodes from
+    the 29,502-node exact-character graph used by the experiments.
 
     Returns a new data dict with pruned idioms, adj_list, idiom_chars,
     idiom_to_id, char_to_id, n_idioms, n_chars.
@@ -120,8 +119,8 @@ def prune_dead_ends(idioms, adj_list, idiom_chars):
             break
 
     removed = n - valid.sum()
-    print(f"  Pruning: removed {removed} cheating idioms, "
-          f"{valid.sum()} valid idioms remaining")
+    print(f"  Pruning: removed {removed} iterative dead-end nodes, "
+          f"{valid.sum()} nodes remaining")
 
     if removed == 0:
         return {

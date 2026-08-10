@@ -104,8 +104,6 @@ def main():
     only_p1_ids = []
     both_win_ids = []
     both_lose_ids = []
-    mixed_ids = []
-
     for i, sid in enumerate(starts):
         sid = int(sid)
         won_p0 = play_one_game(model, qt_policy, adj_list, n_idioms, sid, 0, config, device)
@@ -137,6 +135,7 @@ def main():
             'P1_wins': winners.count(1),
             'None': winners.count(None),
             'P0_rate': winners.count(0) / len(winners) if winners else 0,
+            'P1_rate': winners.count(1) / len(winners) if winners else 0,
         }
 
     print(f"\n--- Only P0 wins ({len(only_p0_ids)} positions) ---")
@@ -145,7 +144,8 @@ def main():
         print(f"  QT-QT says P0 wins: {dist['P0_wins']} ({dist['P0_rate']:.1%})")
         print(f"  QT-QT says P1 wins: {dist['P1_wins']} ({dist.get('P1_rate', 0):.1%})")
         if dist['P0_rate'] > 0.9:
-            print(f"  → 90%+ have inherent first-mover advantage. Genuinely unwinnable from P1.")
+            print("  → Strong correlation with a P0 win under this Q-table policy; "
+                  "not a minimax certificate.")
         else:
             print(f"  → Model's P1 strategy CAN be improved on these positions.")
 
@@ -155,7 +155,8 @@ def main():
         print(f"  QT-QT says P0 wins: {dist['P0_wins']} ({dist['P0_rate']:.1%})")
         print(f"  QT-QT says P1 wins: {dist['P1_wins']} ({dist.get('P1_rate', 0):.1%})")
         if dist.get('P1_rate', 0) > 0.9:
-            print(f"  → 90%+ have inherent second-mover advantage. Genuinely unwinnable from P0.")
+            print("  → Strong correlation with a P1 win under this Q-table policy; "
+                  "not a minimax certificate.")
         else:
             print(f"  → Model's P0 strategy CAN be improved on these positions.")
 
@@ -174,17 +175,14 @@ def main():
     p0_win = (len(both_win_ids) + len(only_p0_ids)) / total
     p1_win = (len(both_win_ids) + len(only_p1_ids)) / total
     overall = (p0_win + p1_win) / 2
-    max_theoretical = (len(both_win_ids) + len(only_p0_ids) + len(only_p1_ids)) / total
-    # Actually max overall = (both_win + only_p0/2 + only_p1/2) / total
-    max_overall = (len(both_win_ids) * 2 + len(only_p0_ids) + len(only_p1_ids)) / (2 * total)
-
     print(f"\n{'='*60}")
     print(f"SUMMARY")
     print(f"{'='*60}")
     print(f"Model P0 win rate: {p0_win:.3f}")
     print(f"Model P1 win rate: {p1_win:.3f}")
     print(f"Overall: {overall:.3f}")
-    print(f"Max overall (if all one-sided positions stay one-sided): {max_overall:.3f}")
+    print("Scope: empirical performance against this fixed Q-table; "
+          "not a game-theoretic upper bound.")
 
 
 if __name__ == '__main__':

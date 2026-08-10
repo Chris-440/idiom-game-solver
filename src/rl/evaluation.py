@@ -12,7 +12,6 @@ def evaluate_vs_random(model, adj_list, n_idioms,
     """Vectorized model vs random. Batches all active games for GPU inference."""
     model.eval()
     wins = 0
-    games_completed = 0
 
     # Split into chunks to avoid OOM with too many parallel games
     chunk_size = 256
@@ -69,7 +68,6 @@ def evaluate_vs_random(model, adj_list, n_idioms,
                 if not games[i].done:
                     new_active.append(i)
                 else:
-                    games_completed += 1
                     if games[i].winner == model_players[i]:
                         wins += 1
             active = new_active
@@ -86,7 +84,6 @@ def evaluate_vs_policy(model, opponent_policy, adj_list, n_idioms,
     """Vectorized model vs arbitrary policy. Batches model inference."""
     model.eval()
     wins = 0
-    games_completed = 0
 
     chunk_size = 256
     for chunk_start in range(0, n_games, chunk_size):
@@ -143,7 +140,6 @@ def evaluate_vs_policy(model, opponent_policy, adj_list, n_idioms,
                 if not games[i].done:
                     new_active.append(i)
                 else:
-                    games_completed += 1
                     if games[i].winner == model_players[i]:
                         wins += 1
             active = new_active
@@ -162,7 +158,6 @@ def evaluate_vs_frozen(model, opponent_model, adj_list, n_idioms,
     model.eval()
     opponent_model.eval()
     wins = 0
-    games_completed = 0
 
     chunk_size = 256
     for chunk_start in range(0, n_games, chunk_size):
@@ -230,7 +225,6 @@ def evaluate_vs_frozen(model, opponent_model, adj_list, n_idioms,
                 if not games[i].done:
                     new_active.append(i)
                 else:
-                    games_completed += 1
                     if games[i].winner == model_players[i]:
                         wins += 1
             active = new_active
@@ -273,7 +267,11 @@ def export_game_trace(model, opponent, adj_list, n_idioms, idioms,
             )
             player_tensor = torch.tensor([game.current_player],
                                          dtype=torch.long, device=device)
-            with torch.no_grad(), torch.amp.autocast('cuda', dtype=torch.bfloat16):
+            device_type = inp['u_ids'].device.type
+            with torch.no_grad(), torch.amp.autocast(
+                    device_type=device_type,
+                    dtype=torch.bfloat16,
+                    enabled=(device_type == 'cuda')):
                 logits, value = model(
                     inp['u_ids'], inp['history_ids'], inp['history_mask'],
                     inp['candidate_ids'], inp['candidate_mask'],

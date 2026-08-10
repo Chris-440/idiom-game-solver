@@ -130,7 +130,11 @@ class PolicyValueNet(nn.Module):
     def get_action(self, u_ids, history_ids, history_mask,
                    candidate_ids, candidate_mask, player_ids,
                    deterministic=False):
-        with torch.amp.autocast('cuda', dtype=torch.bfloat16):
+        device_type = u_ids.device.type
+        with torch.amp.autocast(
+                device_type=device_type,
+                dtype=torch.bfloat16,
+                enabled=(device_type == 'cuda')):
             logits, value = self.forward(
                 u_ids, history_ids, history_mask,
                 candidate_ids, candidate_mask, player_ids

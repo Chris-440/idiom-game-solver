@@ -5,9 +5,7 @@ Sprague-Grundy 求解器模块
 """
 
 from typing import Dict, List, Set, Tuple, Optional
-from functools import lru_cache
 from collections import defaultdict
-import sys
 import pickle
 import os
 

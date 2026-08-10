@@ -6,10 +6,9 @@
 import sys
 import os
 import json
-import time
 import random
 from collections import defaultdict
-from typing import List, Dict, Tuple
+from typing import Dict, Tuple
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 

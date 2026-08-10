@@ -4,16 +4,15 @@
 用于验证算法正确性和评估性能
 """
 
-from typing import Dict, List, Tuple, Optional
+from typing import Dict
 import time
 import json
 import os
-import sys
 
 from .idiom_data import IdiomDictionary, create_sample_data
 from .idiom_graph import IdiomGraph, GameState
 from .sg_solver import SGSolver, TailGroupedSolver, simulate_game
-from .minimax_solver import MinimaxSolver, IterativeDeepeningSolver
+from .minimax_solver import MinimaxSolver
 
 
 class ExperimentRunner:

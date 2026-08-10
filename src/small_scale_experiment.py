@@ -15,9 +15,8 @@ import os
 import json
 import time
 import random
-from collections import defaultdict, deque
-from typing import Dict, List, Tuple, Optional, Set
-import traceback
+from collections import deque
+from typing import Tuple, Set
 
 # 设置路径
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -25,7 +24,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.idiom_data import IdiomDictionary
 from src.idiom_graph import IdiomGraph, GameState
 from src.sg_solver import SGSolver
-from src.minimax_solver import MinimaxSolver
 from src.selfplay_solver import SelfPlaySolver
 from src.q_solver import ValueIterationSolver
 

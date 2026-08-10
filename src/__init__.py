@@ -10,15 +10,6 @@ from .sg_solver import SGSolver, TailGroupedSolver, simulate_game
 from .minimax_solver import MinimaxSolver, IterativeDeepeningSolver
 from .experiment import ExperimentRunner
 
-from collections import defaultdict
-from typing import Dict, List, Set, Tuple, Optional
-from functools import lru_cache
-import pickle
-import os
-import sys
-import time
-
-
 __all__ = [
     'IdiomDictionary',
     'IdiomGraph',

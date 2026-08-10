@@ -10,7 +10,7 @@ class Trajectory:
         True if the model won, False if lost, None if game was truncated.
     terminal_reward (float):
         ±1 for naturally-terminated games.
-        Soft reward in (-0.5, 0.5) for truncated games, based on legal-action ratio.
+        0 for games truncated at the configured step limit.
     """
 
     def __init__(self):

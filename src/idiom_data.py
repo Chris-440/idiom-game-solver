@@ -7,7 +7,6 @@
 from collections import defaultdict
 from typing import Dict, List, Tuple, Optional, Set
 import json
-import os
 
 
 class IdiomDictionary:

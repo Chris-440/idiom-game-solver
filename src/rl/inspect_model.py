@@ -69,7 +69,10 @@ def show_recommendations(model, data, config, idiom_str, top_k=5):
         print(f"'{idiom_str}' has no legal moves — it's a dead end!")
         return
 
-    with torch.no_grad(), torch.amp.autocast('cuda', dtype=torch.bfloat16):
+    with torch.no_grad(), torch.amp.autocast(
+            device_type=config.device,
+            dtype=torch.bfloat16,
+            enabled=(config.device == 'cuda')):
         inp = prepare_model_input(
             game, config.max_history_len, config.max_actions, config.device
         )

@@ -11,7 +11,6 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(_
 sys.path.insert(0, PROJECT_ROOT)
 
 import torch
-import numpy as np
 from src.rl.data_preparation import load_and_index, validate_data
 from src.rl.model import PolicyValueNet
 from src.rl.rollout import collect_rollouts

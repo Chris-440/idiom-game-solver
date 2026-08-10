@@ -9,16 +9,15 @@ import time
 import sys
 import os
 import random
-from collections import defaultdict
-from typing import Dict, List, Tuple
+from typing import Dict
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from src.idiom_data import IdiomDictionary
-from src.idiom_graph import IdiomGraph, GameState
+from src.idiom_graph import IdiomGraph
 from src.q_solver import ValueIterationSolver
 from src.selfplay_solver import SelfPlaySolver
-from src.config import IDIOM_FILE, RESULTS_DIR, get_result_path
+from src.config import IDIOM_FILE, RESULTS_DIR
 
 
 def load_all_idioms(filepath: str) -> IdiomDictionary:

@@ -12,7 +12,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from src.idiom_data import IdiomDictionary
 from src.idiom_graph import IdiomGraph, GameState
 from src.sg_solver import SGSolver
-from src.minimax_solver import MinimaxSolver
 from src.config import IDIOM_FILE, get_result_path
 
 

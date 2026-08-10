@@ -172,7 +172,11 @@ def prepare_training_batch(trajectories, gamma=0.99, lam=0.95, device='cuda'):
 def ppo_update(model, batch, optimizer, clip_eps=0.2,
                value_coef=0.5, entropy_coef=0.01, use_amp=True):
     """Single PPO parameter update. Returns metrics dict."""
-    with torch.amp.autocast('cuda', dtype=torch.bfloat16) if use_amp else torch.enable_grad():
+    device_type = batch['u_ids'].device.type
+    with torch.amp.autocast(
+            device_type=device_type,
+            dtype=torch.bfloat16,
+            enabled=(use_amp and device_type == 'cuda')):
         logits, values = model(
             batch['u_ids'],
             batch['history_ids'],

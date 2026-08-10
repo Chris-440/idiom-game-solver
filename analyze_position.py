@@ -6,7 +6,6 @@ import numpy as np
 import sys
 import pickle
 import os
-from collections import defaultdict
 
 sys.path.insert(0, os.path.dirname(__file__))
 

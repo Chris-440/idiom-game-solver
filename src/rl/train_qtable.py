@@ -5,9 +5,8 @@ Uses numpy for speed, multi-core self-play with TD updates.
 Mirrors the Go code's Q-learning approach.
 """
 
-import sys, os, pickle, time, json
+import sys, os, pickle, time
 from multiprocessing import Pool, cpu_count
-from functools import partial
 import numpy as np
 
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

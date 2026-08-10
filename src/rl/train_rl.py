@@ -13,7 +13,6 @@ import sys
 import os
 import argparse
 import torch
-import numpy as np
 
 # Ensure project root is on path
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(
@@ -23,11 +22,9 @@ if PROJECT_ROOT not in sys.path:
 
 from src.rl.config import RLConfig
 from src.rl.data_preparation import load_and_index, validate_data
-from src.rl.environment import IdiomGame, analyze_start_nodes, test_environment
+from src.rl.environment import analyze_start_nodes, test_environment
 from src.rl.model import PolicyValueNet, test_model
-from src.rl.rollout import collect_rollouts, prepare_model_input
 from src.rl.ppo import test_gae
-from src.rl.evaluation import evaluate_vs_random
 from src.rl.training import train
 
 
@@ -200,8 +197,8 @@ def main():
     p99 = analyze_start_nodes(data['adj_list'], data['n_idioms'],
                               n_samples=1000)
     print(f"  p99={p99}, keeping max_history_len={config.max_history_len}")
-    # Do NOT inflate max_history_len — long games are truncated and
-    # bootstrap from the value function (standard POMDP truncation).
+    # Do NOT inflate max_history_len. Long games are truncated at the
+    # environment step cap and currently receive a neutral terminal reward.
 
     print("=" * 60)
     print("FULL TRAINING: Creating model...")

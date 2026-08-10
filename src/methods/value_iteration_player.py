@@ -6,9 +6,6 @@
 
 import sys
 import os
-import time
-import random
-from collections import defaultdict
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', '..'))
 

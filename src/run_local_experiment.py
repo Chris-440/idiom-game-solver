@@ -9,7 +9,7 @@ import os
 import json
 import time
 import random
-from collections import defaultdict, deque
+from collections import deque
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
