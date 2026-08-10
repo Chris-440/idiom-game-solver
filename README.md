@@ -81,6 +81,12 @@ Go 实现支持多核并行自博弈；仓库保留了训练结果和可加载�
 
 网络只观察最近 64 个先前成语，但环境始终使用完整的已用集合过滤重复动作。因此，历史截断造成的是信息损失，不会放宽合法动作约束。对局在 200 个环境步达到上限时按中性回报截断；当前 GAE 实现没有在截断点进行价值 bootstrap。
 
+## 模型容量与候选状态消融
+
+我们进一步在 18 张精确可解的真实成语子图和完整 26,108 节点图上比较了网络容量与候选感知价值头。跨子图实验支持缩小网络并改善价值拟合，但三随机种子的短 PPO A/B 尚未显示稳定胜率优势，因此候选分支目前只应作为服务器消融版本，不应直接替换正式模型。
+
+完整协议、置信区间、失败案例与下一阶段服务器训练计划见 [`docs/model_ablation_experiments.md`](docs/model_ablation_experiments.md)。
+
 ## 实验结果应该如何解读
 
 仓库中的代表性结果包括：
@@ -193,6 +199,7 @@ python scripts/generate_paper_figures.py
 
 - [`docs/project_description.md`](docs/project_description.md)：项目与传统求解器说明
 - [`docs/selfplay_experiments.md`](docs/selfplay_experiments.md)：PPO V1–V7 实验记录
+- [`docs/model_ablation_experiments.md`](docs/model_ablation_experiments.md)：模型容量、候选状态消融与服务器实验计划
 - [`docs/85percent_limit.md`](docs/85percent_limit.md)：85% 平台期的重新审视
 - [`docs/paper_polished.md`](docs/paper_polished.md)：论文长稿
 - [`idiom_rl_plan.md`](idiom_rl_plan.md)：RL 设计计划与早期假设
